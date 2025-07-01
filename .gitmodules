@@ -1,0 +1,3 @@
+[submodule "devcontainer-r-features"]
+	path = devcontainer-r-features
+	url = git@github.com:jsperger/devcontainer-r-features.git
