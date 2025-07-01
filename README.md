@@ -1,12 +1,7 @@
+# R2U Tidymodels Prebuilt Image
 
-## rocker/r2u: Rocker Containers for r2u
+A "batteries included" Docker image with a comprehensive set of pre-installed packages for R `tidymodels` development and machine learning workflows. The Docker image is based on `rocker/r2u:noble` with additional packages installed. 
 
-This repository provides containers for [r2u](https://eddelbuettel.github.io/r2u/). It extends /
-revisits the initial containers provided by the [r2u](https://eddelbuettel.github.io/r2u/) project.
+> ⚠️ **PRE-ALPHA WARNING**: This image is in pre-alpha development stage. Breaking changes may occur without notice. Not recommended for production use or critical workflows.
 
-The containers are uploaded for each of the supported releases under their respective release names
-(focal, jammy, noble) and release versions (20.04, 22.04, 24.04).  Builds are for the amd64 platform
-and (on 24.04 aka noble only) also for arm64.
-
-Please see [motivation](motivation.md) for how it fits in with other Rocker containers.
-
+Developed for my personal use and may not match your use case. 
