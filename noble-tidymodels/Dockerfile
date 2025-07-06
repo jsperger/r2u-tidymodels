@@ -25,7 +25,7 @@ RUN apt update \
         nano \
         curl \
         wget \
-        libgfortran \
+        libgfortran-13-dev \
         ## For h2o and java-based packages
         default-jdk \
         ## For database connectivity
