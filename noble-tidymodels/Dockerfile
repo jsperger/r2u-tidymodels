@@ -1,6 +1,8 @@
 ## Emacs, make this -*- mode: sh; -*-
-
-FROM rocker/r2u:noble
+# Stage 1: Builder Stage
+# This stage installs all dependencies and builds the R packages.
+#
+FROM rocker/r2u:noble AS builder
 
 ## This image inherits r2u binaries and bspm configuration from rocker/r2u:noble
 ## r2u provides faster package installation via Ubuntu binaries
