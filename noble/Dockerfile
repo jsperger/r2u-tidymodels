@@ -14,19 +14,11 @@ RUN useradd -s /bin/bash -m docker \
 	&& usermod -a -G staff docker \
 ## Refresh apt, install minimal tools
         && apt update \
-        && apt upgrade -y \
-	&& apt install -y --no-install-recommends \
-		ca-certificates \
-		locales \
-		wget \
+        && apt upgrade --yes \
+        && apt install --yes --no-install-recommends \
+      	      ca-certificates \
+      	      locales \
 ## Install key and setup R repo at CRAN
-        && wget -q -O - https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc \
-                | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc  \
-        && echo "deb [signed-by=/etc/apt/trusted.gpg.d/cran_ubuntu_key.asc] https://cloud.r-project.org/bin/linux/ubuntu noble-cran40/" \
-                > /etc/apt/sources.list.d/cran.list \
-## Install key and setup r2u repo, also set 'pin preference'
-        && wget -q -O - https://r2u.stat.illinois.edu/ubuntu/dirk_eddelbuettel_pubkey.asc \
-                | tee -a /etc/apt/trusted.gpg.d/dirk_eddelbuettel_pubkey.asc \
         && echo "Package: *" > /etc/apt/preferences.d/99r2u \
         && echo "Pin: release o=CRAN-Apt Project" >> /etc/apt/preferences.d/99r2u \
         && echo "Pin: release l=CRAN-Apt Packages" >> /etc/apt/preferences.d/99r2u \
@@ -37,7 +29,13 @@ RUN useradd -s /bin/bash -m docker \
 	&& /usr/sbin/update-locale LANG=en_US.UTF-8
 
 ## New format *.sources instead of shorter *.list
+## Canonical sources for the key files are
+##   https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc
+##   https://r2u.stat.illinois.edu/ubuntu/dirk_eddelbuettel_pubkey.asc
 COPY r2u.sources /etc/apt/sources.list.d/
+COPY dirk_eddelbuettel_pubkey.asc /etc/apt/trusted.gpg.d/
+COPY cran.sources /etc/apt/sources.list.d/
+COPY marutter_pubkey.asc /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
 
 ## Set some variables
 ENV LC_ALL=en_US.UTF-8
@@ -49,7 +47,8 @@ ENV TZ=UTC
 # Now install R and littler, and create a link for littler in /usr/local/bin
 # Default CRAN repo is now set by R itself, and littler knows about it too
 RUN apt update \
-        && apt install -y --no-install-recommends \
+        && apt upgrade --yes \
+        && apt install --yes --no-install-recommends \
  		 r-base \
  		 r-base-dev \
  		 r-recommended \
@@ -84,5 +83,7 @@ RUN apt update \
         && echo "options(bspm.version.check=FALSE)" >> /etc/R/Rprofile.site \
         && echo "suppressMessages(bspm::enable())" >> /etc/R/Rprofile.site \
         && echo 'APT::Install-Recommends "false";' > /etc/apt/apt.conf.d/90local-no-recommends \
+        && apt update \
+        && apt upgrade --yes \
 	&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
  	&& rm -rf /var/lib/apt/lists/*
